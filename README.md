@@ -20,4 +20,5 @@ python file_organizer_automation.py
 - `os` — handling file errors
 
 ## Status
-🚧 In Progress
+Completed
+
