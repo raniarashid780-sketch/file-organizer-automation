@@ -1,4 +1,7 @@
 from pathlib import Path
+import os
+import datetime
+import shutil
 
 def create_destination(base, file_type_folder, date_folder):
     destination = base / file_type_folder / date_folder
@@ -17,12 +20,29 @@ def get_file_category(extension):
             return category
     return "Others"
 
-if __name__ == "__main__":
-    base = Path.home() / "Downloads"
-    result = create_destination(base, "Images", "2025-March")
-    print(result)
-    print(get_file_category(".jpg"))
-    print(get_file_category(".pdf"))
-    print(get_file_category(".mp3"))
-    print(get_file_category(".xyz"))
+def get_date_folder(file_path):
+    timestamp = os.path.getmtime(file_path)
+    date = datetime.datetime.fromtimestamp(timestamp)
+    return f"{date.year}-{date.strftime('%B')}"
 
+def organize_files(folder):
+    for file in folder.glob("*"):
+        if file.is_file():
+            extension = file.suffix.lower()
+            category = get_file_category(extension)
+            date = get_date_folder(file)
+            destination = create_destination(folder, category, date)
+            try:
+                shutil.move(file, destination / file.name)
+                print(f"Moved: {file.name} → {destination}")
+            except Exception as e:
+                print(f"Skipped {file.name}: {e}")
+
+def main():
+    organize_files(Path.home() / "Downloads")
+    organize_files(Path.home() / "Desktop")
+    print("Done! Your folders are organized.")
+
+if __name__ == "__main__":
+    main()
+    
