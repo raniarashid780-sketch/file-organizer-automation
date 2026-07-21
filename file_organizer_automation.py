@@ -2,7 +2,8 @@ from pathlib import Path
 import os
 import datetime
 import shutil
-
+import sys
+sys.stdout.reconfigure(encoding="utf-8")
 def create_destination(base, file_type_folder, date_folder):
     destination = base / file_type_folder / date_folder
     destination.mkdir(parents=True, exist_ok=True)
@@ -32,12 +33,18 @@ def organize_files(folder):
             category = get_file_category(extension)
             date = get_date_folder(file)
             destination = create_destination(folder, category, date)
+
+            safe_destination = destination / file.name
+            counter = 1
+            while safe_destination.exists():
+                safe_destination = destination / f"{file.stem} ({counter}){file.suffix}"
+                counter += 1
+
             try:
-                shutil.move(file, destination / file.name)
-                print(f"Moved: {file.name} → {destination}")
+                shutil.move(file, safe_destination)
+                print(f"Moved: {file.name} -> {safe_destination}")
             except Exception as e:
                 print(f"Skipped {file.name}: {e}")
-
 def main():
     organize_files(Path.home() / "Downloads")
     organize_files(Path.home() / "Desktop")
@@ -45,4 +52,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
