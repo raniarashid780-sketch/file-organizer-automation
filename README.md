@@ -20,5 +20,9 @@ python file_organizer_automation.py
 - `os` — handling file errors
 
 ## Status
-Completed
+🚧 In active development — not yet ready for production use.
+
+Currently: working on core bug fixes and safety checks.
+
+Next up: CLI configuration, dry-run mode, test coverage, and a Streamlit UI.
 
