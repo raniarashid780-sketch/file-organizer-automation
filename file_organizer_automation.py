@@ -27,7 +27,10 @@ def get_date_folder(file_path):
     return f"{date.year}-{date.strftime('%B')}"
 
 def organize_files(folder):
+    known_categories = ["Images", "Documents", "Videos", "Music", "Others"]
     for file in folder.glob("*"):
+        if file.name in known_categories:
+            continue
         if file.is_file():
             extension = file.suffix.lower()
             category = get_file_category(extension)
