@@ -2,6 +2,7 @@ from pathlib import Path
 import os
 import datetime
 import shutil
+import argparse
 import sys
 sys.stdout.reconfigure(encoding="utf-8")
 def create_destination(base, file_type_folder, date_folder):
@@ -49,8 +50,15 @@ def organize_files(folder):
             except Exception as e:
                 print(f"Skipped {file.name}: {e}")
 def main():
-    organize_files(Path.home() / "Downloads")
-    organize_files(Path.home() / "Desktop")
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--folder", default=None, help="Folder to organize")
+    args = parser.parse_args()
+
+    if args.folder:
+        organize_files(Path(args.folder))
+    else:
+        organize_files(Path.home() / "Downloads")
+        organize_files(Path.home() / "Desktop")
     print("Done! Your folders are organized.")
 
 if __name__ == "__main__":
