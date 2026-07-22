@@ -1,29 +1,29 @@
 from pathlib import Path
-import os
 import datetime
 import shutil
 import argparse
 import sys
 sys.stdout.reconfigure(encoding="utf-8")
+categories = {
+        "Images": [".jpg", ".jpeg", ".png", ".gif", ".svg"],
+        "Documents": [".pdf", ".docx", ".txt", ".pptx", ".xlsx"],
+        "Videos": [".mp4", ".mkv", ".avi", ".mov"],
+        "Music": [".mp3", ".wav", ".aac"]
+    }
 def create_destination(base, file_type_folder, date_folder):
     destination = base / file_type_folder / date_folder
     destination.mkdir(parents=True, exist_ok=True)
     return destination
 
 def get_file_category(extension):
-    categories = {
-        "Images": [".jpg", ".jpeg", ".png", ".gif", ".svg"],
-        "Documents": [".pdf", ".docx", ".txt", ".pptx", ".xlsx"],
-        "Videos": [".mp4", ".mkv", ".avi", ".mov"],
-        "Music": [".mp3", ".wav", ".aac"]
-    }
+
     for category, extensions in categories.items():
         if extension in extensions:
             return category
     return "Others"
 
 def get_date_folder(file_path):
-    timestamp = os.path.getmtime(file_path)
+    timestamp = file_path.stat().st_mtime
     date = datetime.datetime.fromtimestamp(timestamp)
     return f"{date.year}-{date.strftime('%B')}"
 
