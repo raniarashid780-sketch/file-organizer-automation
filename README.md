@@ -10,19 +10,26 @@ A Python automation script that automatically sorts your Downloads and Desktop f
 - Skips open files gracefully without crashing
 
 ## How to Run
-```bash
-python file_organizer_automation.py
-```
+python file_organizer_automation.py                          # organizes real Downloads/Desktop
+python file_organizer_automation.py --folder "path/to/folder" # organizes a specific folder
 
 ## Modules Used
-- `pathlib` — building and finding folder paths
+- `pathlib` — building and finding folder paths, checking for filename collisions
 - `shutil` — moving files
-- `os` — handling file errors
+- `datetime` — organizing files by modification date
+- `argparse` — CLI configuration (--folder flag for safe testing or scoped runs)
 
 ## Status
+
 🚧 In active development — not yet ready for production use.
 
-Currently: working on core bug fixes and safety checks.
+Done:
+- Collision-safe file moving (no silent overwrites)
+- No unnecessary re-processing of the tool's own output folders
+- CLI configuration via --folder (safe scoped testing or real runs)
 
-Next up: CLI configuration, dry-run mode, test coverage, and a Streamlit UI.
-
+Next up:
+- Dry-run mode
+- Structured logging instead of print statements
+- Test coverage (pytest)
+- Streamlit UI
