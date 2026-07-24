@@ -28,6 +28,7 @@ def get_date_folder(file_path):
     return f"{date.year}-{date.strftime('%B')}"
 
 def organize_files(folder):
+    results = []
     known_categories = ["Images", "Documents", "Videos", "Music", "Others"]
     for file in folder.glob("*"):
         if file.name in known_categories:
@@ -46,19 +47,34 @@ def organize_files(folder):
 
             try:
                 shutil.move(file, safe_destination)
-                print(f"Moved: {file.name} -> {safe_destination}")
+                results.append({
+                    "file": file.name,
+                    "destination": str(safe_destination),
+                    "status": "moved"
+                })
             except Exception as e:
-                print(f"Skipped {file.name}: {e}")
+                results.append({
+                    "file": file.name,
+                    "destination": None,
+                    "status": "error",
+                    "error": str(e)
+                })
+    return results
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--folder", default=None, help="Folder to organize")
     args = parser.parse_args()
 
     if args.folder:
-        organize_files(Path(args.folder))
+        results = organize_files(Path(args.folder))
     else:
-        organize_files(Path.home() / "Downloads")
-        organize_files(Path.home() / "Desktop")
+        results = organize_files(Path.home() / "Downloads") + organize_files(Path.home() / "Desktop")
+
+    for r in results:
+        if r["status"] == "moved":
+            print(f"Moved: {r['file']} -> {r['destination']}")
+        else:
+            print(f"Skipped {r['file']}: {r['error']}")
     print("Done! Your folders are organized.")
 
 if __name__ == "__main__":
