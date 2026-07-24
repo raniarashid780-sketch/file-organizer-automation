@@ -2,7 +2,9 @@ from pathlib import Path
 import datetime
 import shutil
 import argparse
+import logging
 import sys
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 sys.stdout.reconfigure(encoding="utf-8")
 categories = {
         "Images": [".jpg", ".jpeg", ".png", ".gif", ".svg"],
@@ -72,10 +74,9 @@ def main():
 
     for r in results:
         if r["status"] == "moved":
-            print(f"Moved: {r['file']} -> {r['destination']}")
+            logging.info(f"Moved: {r['file']} -> {r['destination']}")
         else:
-            print(f"Skipped {r['file']}: {r['error']}")
-    print("Done! Your folders are organized.")
-
+            logging.error(f"Skipped {r['file']}: {r['error']}")
+    logging.info("Done! Your folders are organized.")
 if __name__ == "__main__":
     main()
